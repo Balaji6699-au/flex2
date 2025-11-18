@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modern Responsive Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
+    <style>
+        /* --- General Reset & Styling --- */
+        body { 
+            margin: 0; 
+            font-family: 'Roboto', sans-serif; 
+            background-color: #f8f9fa; /* Light background */
+            line-height: 1.6;
+            color: #343a40; /* Darker text color */
+        }
+        
+        h1, h2, h3 { 
+            font-family: 'Poppins', sans-serif; 
+            color: #212529; /* Even darker for headings */
+            margin-top: 0;
+            margin-bottom: 15px;
+        }
+
+        /* Utility styling for all major sections */
+        .box { 
+            padding: 25px; /* Slightly more padding */
+            border-radius: 10px; /* Softer rounded corners */
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08); /* More pronounced, soft shadow */
+            transition: transform 0.2s ease-in-out; /* Smooth hover effect */
+        }
+        .box:hover {
+            transform: translateY(-3px); /* Lift on hover */
+        }
+
+        /* --- 1. CSS GRID: Macro Layout (The Dashboard Structure) --- */
+        .dashboard-container {
+            display: grid; 
+            
+            /* Define 3 columns: 220px sidebar, 1fr main, 1fr status */
+            grid-template-columns: 220px 1fr 1fr; 
+            
+            /* Define 2 rows: Header and Main Content */
+            grid-template-rows: auto 1fr; 
+            
+            /* Map the items to their places using named areas */
+            grid-template-areas: 
+                "header header header" 
+                "sidebar main-content status-panel";
+                
+            height: 100vh; 
+            gap: 20px; /* Increased gap */
+            padding: 20px;
+        }
+
+        /* Assign items to their Grid areas */
+        .header { 
+            grid-area: header; 
+            background-image: linear-gradient(to right, #6a11cb 0%, #2575fc 100%); /* Gradient background */
+            color: white; 
+            text-align: center;
+            display: flex; /* Use flex to center title vertically */
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2em;
+        }
+        .header h1 {
+            color: white;
+            margin: 0;
+        }
+
+        .sidebar { 
+            grid-area: sidebar; 
+            background-color: #343a40; /* Darker sidebar */
+            color: #e9ecef; /* Light text */
+        }
+        .sidebar ul {
+            list-style: none;
+            padding: 0;
+            margin-top: 20px;
+        }
+        .sidebar ul li {
+            margin-bottom: 10px;
+        }
+        .sidebar ul li a {
+            color: #e9ecef;
+            text-decoration: none;
+            padding: 8px 10px;
+            display: block;
+            border-radius: 5px;
+            transition: background-color 0.2s ease;
+        }
+        .sidebar ul li a:hover {
+            background-color: #495057;
+        }
+
+        .main-content { 
+            grid-area: main-content; 
+            background-color: #ffffff; /* Pure white for content */
+            color: #343a40; 
+            padding: 30px; /* More internal padding */
+            overflow-y: auto; /* Enable scrolling if content overflows */
+        }
+        .main-content h3 {
+            border-bottom: 2px solid #e9ecef;
+            padding-bottom: 10px;
+            margin-bottom: 25px;
+        }
+
+        .status-panel { 
+            grid-area: status-panel; 
+            background-color: #ffffff; 
+            color: #343a40;
+            border: 1px dashed #ced4da; /* Dashed border for a distinct look */
+            text-align: center;
+            display: flex; /* Use flex to center content vertically */
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+        .status-panel h2 {
+            color: #28a745; /* Green for status */
+            margin-bottom: 10px;
+        }
+        .status-panel p {
+            font-size: 1.1em;
+            color: #6c757d;
+        }
+
+        /* --- 2. CSS FLEXBOX: Micro Layout (The Card Gallery inside Main Content) --- */
+        .card-gallery {
+            display: flex; /* Activate Flexbox */
+            flex-wrap: wrap; /* Allow items to wrap to the next line */
+            justify-content: center; /* Center cards in the available space */
+            align-items: flex-start; /* Align cards to the top of the gallery */
+            
+            /* Make the gallery fill the content area */
+            width: 100%;
+            padding: 0; /* No extra padding here */
+            box-sizing: border-box;
+            margin-top: 20px; /* Space from heading */
+        }
+
+        .data-card {
+            flex: 0 0 calc(33% - 40px); /* 3 cards per row with gap, adjust for padding */
+            max-width: 300px; /* Prevent cards from getting too wide on large screens */
+            
+            margin: 15px; /* Spacing between cards */
+            background-color: #ffffff;
+            color: #495057;
+            border: 1px solid #dee2e6; /* Softer border */
+            padding: 20px;
+            text-align: left;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08); /* Stronger card shadow */
+            border-radius: 8px; /* Softer corners for cards */
+            transition: all 0.3s ease;
+        }
+        .data-card:hover {
+            transform: translateY(-5px) scale(1.02);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+        }
+        .card-title {
+            font-family: 'Poppins', sans-serif;
+            font-weight: 600;
+            color: #007bff;
+            margin-bottom: 10px;
+            font-size: 1.15em;
+        }
+        .card-content {
+            font-size: 0.9em;
+            color: #6c757d;
+        }
+
+        /* --- Responsive Design --- */
+        @media (max-width: 992px) { /* Tablet size */
+            .dashboard-container {
+                grid-template-columns: 200px 1fr; /* Sidebar, then main content */
+                grid-template-rows: auto 1fr auto;
+                grid-template-areas: 
+                    "header header" 
+                    "sidebar main-content"
+                    "status-panel status-panel"; /* Status panel moves below */
+            }
+            .data-card {
+                flex: 0 0 calc(50% - 30px); /* 2 cards per row on tablets */
+            }
+        }
+
+        @media (max-width: 768px) { /* Mobile size */
+            .dashboard-container {
+                grid-template-columns: 1fr; /* Single column */
+                grid-template-rows: auto auto auto 1fr auto; /* Stacked rows */
+                grid-template-areas: 
+                    "header" 
+                    "sidebar"
+                    "status-panel" 
+                    "main-content";
+                height: auto; 
+                padding: 10px;
+            }
+            .data-card {
+                flex: 0 0 calc(100% - 30px); /* 1 card per row on mobile */
+                max-width: none; /* Allow cards to take full width */
+            }
+            .header, .sidebar, .status-panel, .main-content {
+                margin-bottom: 15px; /* Add space between stacked sections */
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="dashboard-container">
+        
+        <header class="box header">
+            <h1>📊 My Awesome Dashboard</h1>
+        </header>
+        
+        <aside class="box sidebar">
+            <h2>Navigation</h2>
+            <ul>
+                <li><a href="#">Dashboard Home</a></li>
+                <li><a href="#">Analytics</a></li>
+                <li><a href="#">Reports</a></li>
+                <li><a href="#">Settings</a></li>
+                <li><a href="#">Help</a></li>
+            </ul>
+        </aside>
+        
+        <section class="box status-panel">
+            <h2>✅ System Status</h2>
+            <p>All services are operational.</p>
+            <p style="font-size:0.8em; color:#868e96;">Last updated: Just now</p>
+        </section>
+        
+        <main class="main-content">
+            <h3>📈 Key Metrics Overview</h3>
+            
+            <div class="card-gallery">
+                <div class="data-card">
+                    <div class="card-title">Total Users</div>
+                    <div class="card-content">
+                        **12,345** active users this month.
+                        <p style="font-size:0.8em; margin-top: 5px; color: #28a745;">+1.5% from last month</p>
+                    </div>
+                </div>
+                <div class="data-card">
+                    <div class="card-title">Revenue</div>
+                    <div class="card-content">
+                        **$56,789** generated so far.
+                        <p style="font-size:0.8em; margin-top: 5px; color: #dc3545;">-0.2% from last month</p>
+                    </div>
+                </div>
+                <div class="data-card">
+                    <div class="card-title">New Signups</div>
+                    <div class="card-content">
+                        **456** new accounts created.
+                        <p style="font-size:0.8em; margin-top: 5px; color: #28a745;">+5.1% from last month</p>
+                    </div>
+                </div>
+                <div class="data-card">
+                    <div class="card-title">Avg. Session</div>
+                    <div class="card-content">
+                        **3m 45s** per user session.
+                        <p style="font-size:0.8em; margin-top: 5px; color: #6c757d;">No change</p>
+                    </div>
+                </div>
+                <div class="data-card">
+                    <div class="card-title">Support Tickets</div>
+                    <div class="card-content">
+                        **12** open tickets remaining.
+                        <p style="font-size:0.8em; margin-top: 5px; color: #ffc107;">High priority: 3</p>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+</body>
+</html>
